@@ -16,14 +16,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./components/ui/button";
 import { useCartStore } from "./stores";
 import { Separator } from "./components/ui/separator";
+import { Badge } from "./components/ui/badge";
 
 const links = ["Collections", "Men", "Women", "About", "Contact"];
 
 function App() {
-  const cart = useCartStore((state) => state.cart);
+  const totalItems = useCartStore((state) => state.getTotalItems());
+  const hasItems = totalItems !== 0;
+
   return (
     <div className="max-w-screen-xl mx-auto">
-      <header className="flex items-center p-4 gap-2 lg:gap-8">
+      <header className="flex items-center p-4 gap-4 lg:gap-8">
         <Sheet>
           <SheetTrigger className="lg:hidden" asChild>
             <Button variant="ghost" size="icon">
@@ -56,25 +59,29 @@ function App() {
         <Popover>
           <PopoverTrigger className="ml-auto" asChild>
             <Button variant="ghost" size="icon">
-              <img src={Cart} alt="" />
+              <div className="relative">
+                <img src={Cart} alt="" />
+                {hasItems && (
+                  <Badge className="absolute top-1/2 right-1/2 -translate-y-full translate-x-full">
+                    {totalItems}
+                  </Badge>
+                )}
+              </div>
               <span className="sr-only">Open shopping cart</span>
             </Button>
-          </PopoverTrigger>
-          <PopoverTrigger className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none ring-offset-background rounded-full">
-            <Avatar>
-              <AvatarImage src={AvatarImg} alt="" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <span className="sr-only">Open shopping cart</span>
           </PopoverTrigger>
           <PopoverContent>
             <h2>Cart</h2>
             <Separator className="my-2" />
             <div className="flex items-center justify-center min-h-32">
-              {cart.length === 0 ? <strong>Your cart is empty.</strong> : ""}
+              {hasItems ? "" : <strong>Your cart is empty.</strong>}
             </div>
           </PopoverContent>
         </Popover>
+        <Avatar>
+          <AvatarImage src={AvatarImg} alt="" />
+          <AvatarFallback>JD</AvatarFallback>
+        </Avatar>
       </header>
     </div>
   );
