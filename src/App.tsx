@@ -14,12 +14,15 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./components/ui/button";
+import { useCartStore } from "./stores";
+import { Separator } from "./components/ui/separator";
 
 const links = ["Collections", "Men", "Women", "About", "Contact"];
 
 function App() {
+  const cart = useCartStore((state) => state.cart);
   return (
-    <>
+    <div className="max-w-screen-xl mx-auto">
       <header className="flex items-center p-4 gap-2 lg:gap-8">
         <Sheet>
           <SheetTrigger className="lg:hidden" asChild>
@@ -64,10 +67,16 @@ function App() {
             </Avatar>
             <span className="sr-only">Open shopping cart</span>
           </PopoverTrigger>
-          <PopoverContent>Place content for the popover here.</PopoverContent>
+          <PopoverContent>
+            <h2>Cart</h2>
+            <Separator className="my-2" />
+            <div className="flex items-center justify-center min-h-32">
+              {cart.length === 0 ? <strong>Your cart is empty.</strong> : ""}
+            </div>
+          </PopoverContent>
         </Popover>
       </header>
-    </>
+    </div>
   );
 }
 
