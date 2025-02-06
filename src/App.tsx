@@ -113,7 +113,7 @@ function App() {
         </Avatar>
       </header>
       <main>
-        <Carousel className="w-full lg:hidden relative">
+        <Carousel opts={{ loop: true }} className="w-full lg:hidden relative">
           <CarouselContent>
             {images.map((img, index) => (
               <CarouselItem key={index}>
