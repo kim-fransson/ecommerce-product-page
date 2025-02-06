@@ -37,7 +37,6 @@ import Image4 from "./assets/images/image-product-4.jpg";
 // import Image4Thumbnail from "./assets/images/image-product-4-thumbnail.jpg";
 import { AspectRatio } from "./components/ui/aspect-ratio";
 import { Menu, Minus, Plus, ShoppingCart } from "lucide-react";
-import { Input } from "./components/ui/input";
 
 const images = [Image1, Image2, Image3, Image4];
 // const thumbnails = [
