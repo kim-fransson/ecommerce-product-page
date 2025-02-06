@@ -66,7 +66,7 @@ function App() {
           <SheetContent side="left">
             <div className="flex flex-col h-full items-center justify-center">
               {links.map((link, index) => (
-                <Button key={index} variant="link" disabled>
+                <Button key={index} variant="link" size="menu" disabled>
                   {link}
                 </Button>
               ))}
