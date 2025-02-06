@@ -19,6 +19,8 @@ import Image3 from "../assets/images/image-product-3.jpg";
 import Image3Thumbnail from "../assets/images/image-product-3-thumbnail.jpg";
 import Image4 from "../assets/images/image-product-4.jpg";
 import Image4Thumbnail from "../assets/images/image-product-4-thumbnail.jpg";
+import { useCartStore } from "@/stores";
+import { useState } from "react";
 
 const product = {
   id: 1,
@@ -37,6 +39,11 @@ const product = {
 };
 
 function ProductInfoSection() {
+  const [quantity, setQuantity] = useState(1);
+  const incrementQuantity = () => setQuantity((prev) => ++prev);
+  const decrementQuantity = () => setQuantity((prev) => --prev);
+
+  const handleAddProductToCart = useCartStore((state) => state.addToCart);
   return (
     <section>
       <h1 className="sr-only">{product.name}</h1>
@@ -80,6 +87,8 @@ function ProductInfoSection() {
           <div className="grid gap-4">
             <div className="flex">
               <Button
+                disabled={quantity === 0}
+                onClick={decrementQuantity}
                 size="lg"
                 variant="secondary"
                 className="rounded-none rounded-l-full z-10 shadow-none"
@@ -88,9 +97,10 @@ function ProductInfoSection() {
                 <span className="sr-only">Decrement amount</span>
               </Button>
               <div className="rounded-none h-10 font-bold flex items-center justify-center bg-secondary text-secondary-foreground w-full">
-                {0}
+                {quantity}
               </div>
               <Button
+                onClick={incrementQuantity}
                 size="lg"
                 variant="secondary"
                 className="rounded-none rounded-r-full z-10 shadow-none"
@@ -99,7 +109,12 @@ function ProductInfoSection() {
                 <span className="sr-only">Increment amount</span>
               </Button>
             </div>
-            <Button size="lg" className="focus-visible:ring-offset-2">
+            <Button
+              disabled={quantity === 0}
+              onClick={() => handleAddProductToCart(product, quantity)}
+              size="lg"
+              className="focus-visible:ring-offset-2"
+            >
               <ShoppingCart />
               Add to cart
             </Button>

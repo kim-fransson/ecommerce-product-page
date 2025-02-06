@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
-import { Menu, ShoppingCart } from "lucide-react";
+import { Menu, ShoppingCart, Trash } from "lucide-react";
 
 import Logo from "../../src/assets/svg/logo.svg";
 import AvatarImg from "../../src/assets/images/image-avatar.png";
@@ -20,10 +20,14 @@ const links = ["Collections", "Men", "Women", "About", "Contact"];
 
 function HeaderSection() {
   const totalItems = useCartStore((state) => state.getTotalItems());
+  const handleRemoveItemFromCart = useCartStore(
+    (state) => state.removeFromCart
+  );
+  const cartItem = useCartStore((state) => state.cart[0]);
   const hasItems = totalItems !== 0;
 
   return (
-    <header className="flex items-center p-4 gap-4 lg:gap-8">
+    <header className="flex items-center p-4 gap-4 lg:gap-8 sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
       <Sheet>
         <SheetTrigger className="lg:hidden" asChild>
           <Button variant="ghost" size="icon">
@@ -67,11 +71,50 @@ function HeaderSection() {
             <span className="sr-only">Open shopping cart</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
-          <h2>Cart</h2>
+        <PopoverContent className="w-[calc(100dvw-1rem)] mx-2 my-6">
+          <h2 className="font-bold">Cart</h2>
           <Separator className="my-2" />
-          <div className="flex items-center justify-center min-h-32">
-            {hasItems ? "" : <strong>Your cart is empty.</strong>}
+          <div className="flex items-center justify-center min-h-44 border-none">
+            {hasItems ? (
+              <div className="grid gap-5 w-full">
+                <div className="grid gap-4 grid-cols-[auto_1fr_auto] items-center">
+                  <img
+                    src={cartItem.product.images[0].thumbnail}
+                    alt=""
+                    className="object-cover rounded max-w-12"
+                  />
+                  <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-1">
+                    <span className="col-span-full capitalize text-sm font-semibold opacity-50">
+                      {cartItem.product.name}
+                    </span>
+                    <span className="opacity-50">{`$${(
+                      cartItem.product.price * cartItem.product.discount
+                    ).toFixed(2)} x ${cartItem.quantity}`}</span>
+
+                    <strong className="justify-self-start">
+                      {`$${(
+                        cartItem.product.price *
+                        cartItem.product.discount *
+                        cartItem.quantity
+                      ).toFixed(2)}`}
+                    </strong>
+                  </div>
+                  <Button
+                    onClick={() =>
+                      handleRemoveItemFromCart(cartItem.product.id)
+                    }
+                    className="justify-self-end"
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <Trash />
+                  </Button>
+                </div>
+                <Button size="lg">Checkout</Button>
+              </div>
+            ) : (
+              <strong className="opacity-50">Your cart is empty.</strong>
+            )}
           </div>
         </PopoverContent>
       </Popover>
