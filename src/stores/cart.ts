@@ -1,14 +1,5 @@
 import { create } from "zustand";
 
-type Product = {
-  id: number;
-  price: number;
-  discount: number;
-  name: string;
-  description: string;
-  brand: string;
-};
-
 interface CartItem {
   product: Product;
   quantity: number;

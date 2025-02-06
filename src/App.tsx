@@ -1,6 +1,4 @@
 import Logo from "../src/assets/svg/logo.svg";
-import Menu from "../src/assets/svg/icon-menu.svg";
-import Cart from "../src/assets/svg/icon-cart.svg";
 
 import AvatarImg from "../src/assets/images/image-avatar.png";
 
@@ -38,6 +36,8 @@ import Image3 from "./assets/images/image-product-3.jpg";
 import Image4 from "./assets/images/image-product-4.jpg";
 // import Image4Thumbnail from "./assets/images/image-product-4-thumbnail.jpg";
 import { AspectRatio } from "./components/ui/aspect-ratio";
+import { Menu, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Input } from "./components/ui/input";
 
 const images = [Image1, Image2, Image3, Image4];
 // const thumbnails = [
@@ -46,6 +46,16 @@ const images = [Image1, Image2, Image3, Image4];
 //   Image3Thumbnail,
 //   Image4Thumbnail,
 // ];
+
+const product: Product = {
+  id: 1,
+  brand: "sneaker company",
+  name: "fall limited edition sneakers",
+  description:
+    "These low-profile sneakers are your perfect casual wear companion. Featuring a durable rubber outer sole, they'll withstand everything the weather can offer.",
+  discount: 0.5,
+  price: 250.0,
+};
 
 const links = ["Collections", "Men", "Women", "About", "Contact"];
 
@@ -59,7 +69,7 @@ function App() {
         <Sheet>
           <SheetTrigger className="lg:hidden" asChild>
             <Button variant="ghost" size="icon">
-              <img src={Menu} alt="" />
+              <Menu />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
@@ -89,7 +99,7 @@ function App() {
           <PopoverTrigger className="ml-auto" asChild>
             <Button variant="ghost" size="icon">
               <div className="relative">
-                <img src={Cart} alt="" />
+                <ShoppingCart />
                 {hasItems && (
                   <Badge className="absolute top-1/2 right-1/2 -translate-y-full translate-x-full">
                     {totalItems}
@@ -113,19 +123,73 @@ function App() {
         </Avatar>
       </header>
       <main>
-        <Carousel opts={{ loop: true }} className="w-full lg:hidden relative">
-          <CarouselContent>
-            {images.map((img, index) => (
-              <CarouselItem key={index}>
-                <AspectRatio ratio={3 / 2}>
-                  <img src={img} alt="" />
-                </AspectRatio>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-4" />
-          <CarouselNext className="absolute right-4" />
-        </Carousel>
+        <h1 className="sr-only">{product.name}</h1>
+        <section>
+          <h2 className="sr-only">image carousel</h2>
+          <Carousel opts={{ loop: true }} className="w-full lg:hidden relative">
+            <CarouselContent>
+              {images.map((img, index) => (
+                <CarouselItem key={index}>
+                  <AspectRatio ratio={5 / 4}>
+                    <img src={img} alt="" />
+                  </AspectRatio>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-4" />
+            <CarouselNext className="absolute right-4" />
+          </Carousel>
+        </section>
+
+        <section>
+          <h2 className="sr-only">product information</h2>
+          <article className="grid p-6 gap-4">
+            <span className="uppercase text-xs tracking-widest opacity-50 font-bold">
+              {product.brand}
+            </span>
+            <span className="capitalize text-3xl font-extrabold">
+              {product.name}
+            </span>
+            <p className="opacity-50">{product.description}</p>
+            <div className="grid grid-cols-[auto_auto_1fr] gap-4 items-center">
+              <strong className="text-3xl">
+                ${(product.price * product.discount).toFixed(2)}
+              </strong>
+              <Badge>{product.discount * 100 + "%"}</Badge>
+              <del className="justify-self-end font-bold opacity-50">
+                ${product.price.toFixed(2)}
+              </del>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="flex">
+                <Button
+                  variant="secondary"
+                  className="rounded-none rounded-l-full"
+                >
+                  <Minus />
+                  <span className="sr-only">Decrement amount</span>
+                </Button>
+                <Input
+                  className="rounded-none font-bold border-none bg-secondary text-secondary-foreground text-center"
+                  readOnly
+                  value={0}
+                />
+                <Button
+                  variant="secondary"
+                  className="rounded-none rounded-r-full"
+                >
+                  <Plus />
+                  <span className="sr-only">Increment amount</span>
+                </Button>
+              </div>
+              <Button>
+                <ShoppingCart />
+                Add to cart
+              </Button>
+            </div>
+          </article>
+        </section>
       </main>
     </div>
   );
