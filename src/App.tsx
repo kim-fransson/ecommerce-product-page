@@ -164,26 +164,26 @@ function App() {
             <div className="grid gap-4">
               <div className="flex">
                 <Button
+                  size="lg"
                   variant="secondary"
-                  className="rounded-none rounded-l-full"
+                  className="rounded-none rounded-l-full z-10 shadow-none"
                 >
                   <Minus />
                   <span className="sr-only">Decrement amount</span>
                 </Button>
-                <Input
-                  className="rounded-none font-bold border-none bg-secondary text-secondary-foreground text-center"
-                  readOnly
-                  value={0}
-                />
+                <div className="rounded-none h-10 font-bold flex items-center justify-center bg-secondary text-secondary-foreground w-full">
+                  {0}
+                </div>
                 <Button
+                  size="lg"
                   variant="secondary"
-                  className="rounded-none rounded-r-full"
+                  className="rounded-none rounded-r-full z-10 shadow-none"
                 >
                   <Plus />
                   <span className="sr-only">Increment amount</span>
                 </Button>
               </div>
-              <Button>
+              <Button size="lg" className="focus-visible:ring-offset-2">
                 <ShoppingCart />
                 Add to cart
               </Button>
