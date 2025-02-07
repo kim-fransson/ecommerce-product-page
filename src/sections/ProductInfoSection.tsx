@@ -45,7 +45,7 @@ function ProductInfoSection() {
 
   const handleAddProductToCart = useCartStore((state) => state.addToCart);
   return (
-    <section>
+    <section className="lg:grid lg:grid-cols-2 lg:h-full lg:items-center">
       <h1 className="sr-only">{product.name}</h1>
       <section>
         <h2 className="sr-only">image carousel</h2>
@@ -66,26 +66,28 @@ function ProductInfoSection() {
 
       <section>
         <h2 className="sr-only">product information</h2>
-        <article className="grid p-6 gap-4">
-          <span className="uppercase text-xs tracking-widest opacity-50 font-bold">
+        <article className="grid p-6 gap-4 lg:gap-8">
+          <span className="uppercase text-xs lg:text-sm tracking-widest opacity-50 font-bold">
             {product.brand}
           </span>
-          <span className="capitalize text-3xl font-extrabold">
+          <span className="capitalize text-3xl lg:text-5xl font-extrabold">
             {product.name}
           </span>
-          <p className="opacity-50">{product.description}</p>
-          <div className="grid grid-cols-[auto_auto_1fr] gap-4 items-center">
+          <p className="opacity-50 lg:text-lg">{product.description}</p>
+          <div className="grid grid-cols-[auto_auto_1fr] lg:grid-cols-[auto_1fr] gap-4 items-center">
             <strong className="text-3xl">
               ${(product.price * product.discount).toFixed(2)}
             </strong>
-            <Badge>{product.discount * 100 + "%"}</Badge>
-            <del className="justify-self-end font-bold opacity-50">
+            <Badge className="lg:justify-self-start">
+              {product.discount * 100 + "%"}
+            </Badge>
+            <del className="justify-self-end lg:justify-self-start font-bold opacity-50">
               ${product.price.toFixed(2)}
             </del>
           </div>
 
-          <div className="grid gap-4">
-            <div className="flex">
+          <div className="grid lg:grid-cols-12 gap-4">
+            <div className="flex lg:col-span-4">
               <Button
                 disabled={quantity === 0}
                 onClick={decrementQuantity}
@@ -113,7 +115,7 @@ function ProductInfoSection() {
               disabled={quantity === 0}
               onClick={() => handleAddProductToCart(product, quantity)}
               size="lg"
-              className="focus-visible:ring-offset-2"
+              className="focus-visible:ring-offset-2 lg:col-span-8"
             >
               <ShoppingCart />
               Add to cart

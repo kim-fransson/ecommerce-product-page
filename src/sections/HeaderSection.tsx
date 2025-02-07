@@ -27,7 +27,7 @@ function HeaderSection() {
   const hasItems = totalItems !== 0;
 
   return (
-    <header className="flex items-center p-4 gap-4 lg:gap-8 sticky top-0 z-50 bg-white/95 backdrop-blur-sm">
+    <header className="flex items-center p-4 gap-4 lg:gap-8 sticky lg:static top-0 z-50 bg-white/95 backdrop-blur-sm lg:border-b">
       <Sheet>
         <SheetTrigger className="lg:hidden" asChild>
           <Button variant="ghost" size="icon">
@@ -71,7 +71,7 @@ function HeaderSection() {
             <span className="sr-only">Open shopping cart</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[calc(100dvw-1rem)] mx-2 my-6">
+        <PopoverContent className="w-[calc(100dvw-1rem)] mx-2 my-6 lg:min-w-[22rem] lg:w-auto">
           <h2 className="font-bold">Cart</h2>
           <Separator className="my-2" />
           <div className="flex items-center justify-center min-h-44 border-none">
