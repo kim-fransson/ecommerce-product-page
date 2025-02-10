@@ -20,13 +20,12 @@ import Image3Thumbnail from "../assets/images/image-product-3-thumbnail.jpg";
 import Image4 from "../assets/images/image-product-4.jpg";
 import Image4Thumbnail from "../assets/images/image-product-4-thumbnail.jpg";
 import { useCartStore } from "@/stores";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -52,8 +51,23 @@ const product = {
 function ProductInfoSection() {
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(product.images[0].original);
+  const [currentLightboxImageIndex, setCurrentLightboxImageIndex] = useState(
+    product.images.findIndex((img) => img.original === currentImage)
+  );
+  const handleNextLightboxImageIndex = () =>
+    setCurrentLightboxImageIndex((v) => (v + 1) % product.images.length);
+
+  const handlePreviousLightboxImageIndex = () =>
+    setCurrentLightboxImageIndex((v) => (v - 1) % product.images.length);
+
   const incrementQuantity = () => setQuantity((prev) => ++prev);
   const decrementQuantity = () => setQuantity((prev) => --prev);
+
+  useEffect(() => {
+    setCurrentLightboxImageIndex(
+      product.images.findIndex((img) => img.original === currentImage)
+    );
+  }, [currentImage]);
 
   const handleAddProductToCart = useCartStore((state) => state.addToCart);
   return (
@@ -86,17 +100,67 @@ function ProductInfoSection() {
                 <img
                   src={currentImage}
                   className="rounded-2xl h-full w-full object-cover"
+                  alt=""
                 />
               </AspectRatio>
+              <span className="sr-only">Open carousel dialog</span>
             </DialogTrigger>
+            <DialogTitle className="sr-only">Image Carousel</DialogTitle>
+            <DialogDescription className="sr-only">
+              Look at different product images
+            </DialogDescription>
             <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
+              <Carousel
+                onChange={(v) => console.log(v)}
+                opts={{
+                  loop: true,
+                  startIndex: currentLightboxImageIndex,
+                }}
+                className="w-full relative"
+              >
+                <CarouselContent>
+                  {product.images.map((img, index) => (
+                    <CarouselItem key={index}>
+                      <AspectRatio ratio={1 / 1}>
+                        <img
+                          src={img.original}
+                          alt=""
+                          className="h-full w-full object-cover rounded-2xl"
+                        />
+                      </AspectRatio>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious
+                  onClick={handlePreviousLightboxImageIndex}
+                  className="absolute left-0 -translate-x-1/2"
+                />
+                <CarouselNext
+                  onClick={handleNextLightboxImageIndex}
+                  className="absolute right-0 translate-x-1/2"
+                />
+              </Carousel>
+
+              <ToggleGroup
+                type="single"
+                className="justify-center gap-8 "
+                onValueChange={(v) => setCurrentLightboxImageIndex(Number(v))}
+                value={currentLightboxImageIndex.toString()}
+              >
+                {product.images.map((image, index) => (
+                  <ToggleGroupItem
+                    key={index}
+                    value={index.toString()}
+                    aria-label={`Thumbnail ${index + 1}`}
+                  >
+                    <img
+                      src={image.thumbnail}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="max-w-24"
+                    />
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
             </DialogContent>
           </Dialog>
 
