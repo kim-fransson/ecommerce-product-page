@@ -22,6 +22,17 @@ import Image4Thumbnail from "../assets/images/image-product-4-thumbnail.jpg";
 import { useCartStore } from "@/stores";
 import { useState } from "react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+
 const product = {
   id: 1,
   brand: "sneaker company",
@@ -40,12 +51,13 @@ const product = {
 
 function ProductInfoSection() {
   const [quantity, setQuantity] = useState(1);
+  const [currentImage, setCurrentImage] = useState(product.images[0].original);
   const incrementQuantity = () => setQuantity((prev) => ++prev);
   const decrementQuantity = () => setQuantity((prev) => --prev);
 
   const handleAddProductToCart = useCartStore((state) => state.addToCart);
   return (
-    <section className="lg:grid lg:grid-cols-2 lg:h-full lg:items-center">
+    <section className="lg:grid lg:grid-cols-2 lg:h-full lg:items-center lg:p-12 lg:gap-28">
       <h1 className="sr-only">{product.name}</h1>
       <section>
         <h2 className="sr-only">image carousel</h2>
@@ -54,7 +66,11 @@ function ProductInfoSection() {
             {product.images.map((img, index) => (
               <CarouselItem key={index}>
                 <AspectRatio ratio={5 / 4}>
-                  <img src={img.original} alt="" />
+                  <img
+                    src={img.original}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
                 </AspectRatio>
               </CarouselItem>
             ))}
@@ -62,6 +78,49 @@ function ProductInfoSection() {
           <CarouselPrevious className="absolute left-4" />
           <CarouselNext className="absolute right-4" />
         </Carousel>
+
+        <div className="max-w-[440px] mx-auto hidden lg:grid gap-8">
+          <Dialog>
+            <DialogTrigger className="w-full focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-2 rounded-2xl">
+              <AspectRatio ratio={1 / 1}>
+                <img
+                  src={currentImage}
+                  className="rounded-2xl h-full w-full object-cover"
+                />
+              </AspectRatio>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <ToggleGroup
+            type="single"
+            className="justify-between"
+            onValueChange={setCurrentImage}
+            defaultValue={currentImage}
+          >
+            {product.images.map((image, index) => (
+              <ToggleGroupItem
+                key={index}
+                value={image.original}
+                aria-label={`Thumbnail ${index + 1}`}
+              >
+                <img
+                  src={image.thumbnail}
+                  alt={`Thumbnail ${index + 1}`}
+                  className="max-w-24"
+                />
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
       </section>
 
       <section>
@@ -86,8 +145,8 @@ function ProductInfoSection() {
             </del>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-4">
-            <div className="flex lg:col-span-4">
+          <div className="grid lg:flex gap-4">
+            <div className="flex">
               <Button
                 disabled={quantity === 0}
                 onClick={decrementQuantity}
@@ -115,7 +174,7 @@ function ProductInfoSection() {
               disabled={quantity === 0}
               onClick={() => handleAddProductToCart(product, quantity)}
               size="lg"
-              className="focus-visible:ring-offset-2 lg:col-span-8"
+              className="focus-visible:ring-offset-2 lg:flex-1"
             >
               <ShoppingCart />
               Add to cart
